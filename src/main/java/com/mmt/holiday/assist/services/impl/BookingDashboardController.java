@@ -27,20 +27,19 @@ public class BookingDashboardController {
 	private static  ObjectWriter jsonWriter;
 	private  boolean isProductionDB=true;
 	private static DSLContext create;
-	
+
 
 	static {
 		Reporter.log("within static block ",true);
 		jsonWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
-		//create = DBUtils.getDSLContext(isProductionDB);
-		
+
 	}
-	
+
 	private void setUp(){
-		
+
 		create = DBUtils.getDSLContext(isProductionDB);
 	}
-	
+
 	@GET
 	@Path("getBookingDataForDateRange")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -49,7 +48,7 @@ public class BookingDashboardController {
 		setUp();
 		DBProcessHandlerImpl dbProcessHandler = new DBProcessHandlerImpl(create);
 		DBService dbService=new DBService(dbProcessHandler);
-		
+
 		return jsonWriter.writeValueAsString(dbService.getDataForDateRange(startDate, endDate));
 
 	}
@@ -84,14 +83,14 @@ public class BookingDashboardController {
 		}
 		return message;
 	}
-	
+
 	@GET
 	@Path("try")
 	@Produces(MediaType.TEXT_PLAIN)
 	public String returnString() {
 		return "sucess";
 	}
-	
+
 	/*@Test
 	public void testData() throws JsonProcessingException{*/
 	@GET
@@ -101,7 +100,7 @@ public class BookingDashboardController {
 
 	//	String nlId = "NL4t";// "NL4104531270920";//"NS860503139536";//
 							// "NL23102366856";//"NC860513187492";
-		
+
 		return jsonWriter.writeValueAsString(kickOffProcess(ServiceUtil.getNlType(nlId), nlId));
 
 	}
@@ -110,9 +109,9 @@ public class BookingDashboardController {
 		setUp();
 		DBProcessHandlerImpl dbProcessHandler = new DBProcessHandlerImpl(create);
 		DBService dbService=new DBService(dbProcessHandler);
-		
+
 		DefaultResponse defaultResponse = new DefaultResponse();
-		
+
 		switch (nlType) {
 		case HOLIDAY:
 			return dbService.getDataForNLid(nlId);

@@ -58,62 +58,56 @@ public class SshTunnel {
 	}
 
 	public static String performOperationOnServer(String localServerIp, Object operation, HolOperations action,StringBuffer messageFromServer) {
-		
+
 
 		Reporter.log("Starting a thread for : "+localServerIp,true);
 		BufferedReader  messageReader = null;
-		
+
 		InputStream stdout=null;
 
 		try {
 			Session session = connectToServer(localServerIp);
 			session.requestPTY("xterm");
-			
+
 
 			switch (action) {
 
 			case TENTAKEL:
 				TentakelData tentakelData = (TentakelData) operation;
-				
+
 				String grepVariant=isCurrentDate(tentakelData.getDateToLookup())?"grep":"zgrep";
-				
+
 				Reporter.log("tentakel -g " + tentakelData.getGroup().toString() + " \"hostname; "+grepVariant+" -C70 '"
 						+ tentakelData.getTextToSearch() + "' /opt/apache-tomcat-7.0.42/logs/"
 						+getLogFileToLookUp(tentakelData)+"\"",true);
-				
+
 				session.execCommand("tentakel -g " + tentakelData.getGroup().toString() + " \"hostname; "+grepVariant+" -C70 '"
 						+ tentakelData.getTextToSearch() + "' /opt/apache-tomcat-7.0.42/logs/"
 								+getLogFileToLookUp(tentakelData)+"\"");
-				
-				/*Reporter.log(("tentakel -g HolidaysNode  \"hostname; "+grepVariant+" -C3 '"
-						+ tentakelData.getTextToSearch() + "' /opt/logs/node_logs.log.2017-02-10 \""),true);
-				
-				session.execCommand("tentakel -g HolidaysNode  \"hostname; "+grepVariant+" -C3 '"
-						+ tentakelData.getTextToSearch() + "' /opt/logs/node_logs.log.2017-02-10 \"");
-				*/
-				
+
+
 				 stdout = new StreamGobbler(session.getStdout());
-		
+
 				break;
-			
+
 			default:
 				Reporter.log("Unknown action", true);
 
 			}
-			
+
 			messageReader = new BufferedReader(new InputStreamReader(stdout));
 			String x=getMessageFromStream(messageReader, new StringBuffer()).toString();
 			 messageFromServer.append(x);
 
-		
+
 			session.close();
-		
+
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
 
 		} finally {
-			
+
 			IOUtils.closeQuietly(messageReader);
 		}
 		return messageFromServer.toString();
@@ -147,13 +141,13 @@ public class SshTunnel {
 
 	private static StringBuffer getMessageFromStream(BufferedReader messageReader, StringBuffer messageFromServer) {
 		String readLine = "";
-		
+
 
 		try {
 			while ((readLine = messageReader.readLine()) != null) {
 				messageFromServer.append(readLine).append(System.lineSeparator());
-				
-				
+
+
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();

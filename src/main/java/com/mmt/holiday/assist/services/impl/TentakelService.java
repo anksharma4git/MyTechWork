@@ -23,21 +23,12 @@ import com.mmt.holiday.assist.ssh.tunnel.tentakel.TentakelGroup;
 @Path("/tentakel-service")
 public class TentakelService implements HolidayOperations {
 
-	/*
-	 * @Test public void testTentakel(){
-	 */
 	@GET
 	@Path("getTentakelData")
 	@Produces(MediaType.TEXT_PLAIN)
 	public String testTentakel(@QueryParam("stringToSearch") String stringToSearch,
 			@QueryParam("lookUpDate") String lookUpDate) {
 		ExecutorService execService = Executors.newFixedThreadPool(2);
-		/*
-		 * String
-		 * stringToSearch="viratkohli1@gmail.com";//,lookUpDate="2017-01-11";
-		 * Reporter.log(startWorkerJob(execService, stringToSearch, lookUpDate),
-		 * true);
-		 */
 		return startWorkerJob(execService, stringToSearch, lookUpDate);
 	}
 
@@ -92,5 +83,5 @@ public class TentakelService implements HolidayOperations {
 		return tentakelData;
 	}
 
-	
+
 }
