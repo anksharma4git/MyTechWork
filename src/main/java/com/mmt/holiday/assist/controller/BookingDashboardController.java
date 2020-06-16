@@ -65,7 +65,6 @@ public class BookingDashboardController {
 			count = dbService.updateCountForUser();
 		} catch (Exception e) {
 			return ("Exception occurred " + e.getMessage());
-			// Reporter.log("Exception occurred "+e.getMessage(),true);
 		}
 		return "Usage count: " + count;
 
@@ -91,16 +90,11 @@ public class BookingDashboardController {
 		return "sucess";
 	}
 
-	/*@Test
-	public void testData() throws JsonProcessingException{*/
+
 	@GET
 	@Path("getBookingData")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getBookingDataForDashboard(@QueryParam("nlid")String nlId) throws JsonProcessingException {
-
-	//	String nlId = "NL4t";// "NL4104531270920";//"NS860503139536";//
-							// "NL23102366856";//"NC860513187492";
-
 		return jsonWriter.writeValueAsString(kickOffProcess(ServiceUtil.getNlType(nlId), nlId));
 
 	}
